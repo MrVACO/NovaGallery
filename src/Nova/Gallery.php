@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource;
 use MrVaco\NovaGallery\Models\Gallery as GalleryModel;
+use MrVaco\NovaStatusesManager\Classes\StatusClass;
 use MrVaco\NovaStatusesManager\Fields\Status;
 
 class Gallery extends Resource
@@ -37,7 +38,11 @@ class Gallery extends Resource
             
             Text::make('Description'),
             
-            Status::make('Status'),
+            Status::make(__('Status'), 'status')
+                ->rules('required')
+                ->options(StatusClass::LIST('full'))
+                ->default(StatusClass::ACTIVE()->id)
+                ->sortable(),
         ];
     }
 }
