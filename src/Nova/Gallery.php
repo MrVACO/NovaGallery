@@ -6,6 +6,7 @@ namespace MrVaco\NovaGallery\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource;
 use MrVaco\NovaGallery\Models\Gallery as GalleryModel;
@@ -34,15 +35,20 @@ class Gallery extends Resource
         return [
             ID::make(),
             
-            Text::make('Name'),
+            Text::make('Name')
+                ->rules('required')
+                ->fullWidth(),
             
-            Text::make('Description'),
+            Textarea::make('Description')
+                ->rows(2)
+                ->fullWidth(),
             
             Status::make(__('Status'), 'status')
                 ->rules('required')
                 ->options(StatusClass::LIST('full'))
                 ->default(StatusClass::ACTIVE()->id)
-                ->sortable(),
+                ->sortable()
+                ->fullWidth(),
         ];
     }
 }
