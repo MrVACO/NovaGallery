@@ -1,0 +1,30 @@
+{
+    "name": "mr-vaco/nova-gallery",
+    "description": "A Laravel Nova tool.",
+    "keywords": [
+        "laravel",
+        "nova"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.3|^8.0",
+        "mr-vaco/nova-statuses-manager": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "MrVaco\\NovaGallery\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MrVaco\\NovaGallery\\ToolServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
