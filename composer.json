@@ -9,7 +9,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "mr-vaco/nova-statuses-manager": "^0.1",
-        "whitecube/nova-flexible-content": "^0.2.6"
+        "whitecube/nova-flexible-content": "^1.0"
     },
     "autoload": {
         "psr-4": {
