@@ -4,7 +4,11 @@ declare(strict_types = 1);
 
 namespace MrVaco\NovaGallery\Nova;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -12,6 +16,7 @@ use Laravel\Nova\Resource;
 use MrVaco\NovaGallery\Models\Gallery as GalleryModel;
 use MrVaco\NovaStatusesManager\Classes\StatusClass;
 use MrVaco\NovaStatusesManager\Fields\Status;
+use Whitecube\NovaFlexibleContent\Flexible;
 
 class Gallery extends Resource
 {
@@ -49,6 +54,31 @@ class Gallery extends Resource
                 ->default(StatusClass::ACTIVE()->id)
                 ->sortable()
                 ->fullWidth(),
+            
+            Number::make(__('Count images'))
+                ->displayUsing(function()
+                {
+                    return $this->imagesCount();
+                })
+                ->textAlign('center')
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            
+            Flexible::make(__('Images'), 'images')
+                ->addLayout(__('Image'), 'layout_image', [
+                    Image::make(__('Image'), 'image')
+                        ->disk('public')
+                        ->path(
+                            sprintf('/galleries/%s', Carbon::now()->format("Y-m-d"))
+                        )
+                        ->preview(function($value, $disk)
+                        {
+                            return $value
+                                ? Storage::disk($disk)->url($value)
+                                : null;
+                        })
+                        ->fullWidth(),
+                ])
         ];
     }
 }

@@ -8,7 +8,8 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "mr-vaco/nova-statuses-manager": "@dev"
+        "mr-vaco/nova-statuses-manager": "^0.1",
+        "whitecube/nova-flexible-content": "^0.2.6"
     },
     "autoload": {
         "psr-4": {
@@ -25,6 +26,6 @@
     "config": {
         "sort-packages": true
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
