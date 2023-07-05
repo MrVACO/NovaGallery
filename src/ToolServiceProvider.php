@@ -22,6 +22,11 @@ class ToolServiceProvider extends ServiceProvider
                 new NovaGallery
             ]);
         });
+        
+        $this->app->booted(function()
+        {
+            $this->routes();
+        });
     }
     
     /**
@@ -34,5 +39,18 @@ class ToolServiceProvider extends ServiceProvider
         Nova::resources([
             Gallery::class
         ]);
+    }
+    
+    protected function routes(): void
+    {
+        if ($this->app->routesAreCached())
+        {
+            return;
+        }
+        
+        app('router')
+            ->middleware('api')
+            ->prefix('api/gallery')
+            ->group(__DIR__ . '/../routes/api.php');
     }
 }
