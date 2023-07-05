@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Gallery extends Model
 {
-    protected $table = 'galleries';
+    protected $table = 'mrvaco_gallery';
     
     protected $fillable = [
         'name',
@@ -20,4 +20,9 @@ class Gallery extends Model
         'images' => 'array',
         'year'   => 'integer'
     ];
+    
+    public function imagesCount(): int
+    {
+        return count($this->images);
+    }
 }
