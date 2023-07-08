@@ -2,6 +2,7 @@
 
 namespace MrVaco\NovaGallery;
 
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
@@ -21,6 +22,8 @@ class ToolServiceProvider extends ServiceProvider
             Nova::tools([
                 new NovaGallery
             ]);
+            
+            Lang::addJsonPath(__DIR__ . '/../lang');
         });
         
         $this->app->booted(function()

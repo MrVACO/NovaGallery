@@ -40,13 +40,13 @@ class Gallery extends Resource
         return [
             ID::make(),
             
-            Text::make('Name')
+            Text::make(__('Name'), 'name')
                 ->rules('required')
                 ->fullWidth(),
             
-            Textarea::make('Description')
+            Textarea::make(__('Description'), 'description')
                 ->rows(2)
-                ->fullWidth(),
+                ->sortable(),
             
             Status::make(__('Status'), 'status')
                 ->rules('required')
