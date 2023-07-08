@@ -81,4 +81,9 @@ class Gallery extends Resource
                 ])
         ];
     }
+    
+    public static function label(): string
+    {
+        return __('Gallery');
+    }
 }
