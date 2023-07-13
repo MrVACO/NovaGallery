@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 use Laravel\Nova\Resource;
 use MrVaco\NovaGallery\Models\Gallery as GalleryModel;
 use MrVaco\NovaStatusesManager\Classes\StatusClass;
@@ -37,23 +38,34 @@ class Gallery extends Resource
     
     public function fields(NovaRequest $request): array
     {
+        return array_merge([Panel::make('', $this->primaryPanel())], $this->secondaryPanel());
+    }
+    
+    public function fieldsForCreate(NovaRequest $request): array
+    {
+        return array_merge([
+            Panel::make(__('Create gallery'), $this->primaryPanel())
+        ], $this->secondaryPanel($request));
+    }
+    
+    public function fieldsForUpdate(NovaRequest $request): array
+    {
+        return array_merge([
+            Panel::make(__('Update gallery'), $this->primaryPanel())
+        ], $this->secondaryPanel($request));
+    }
+    
+    protected function primaryPanel(): array
+    {
         return [
             ID::make(),
             
             Text::make(__('Name'), 'name')
-                ->rules('required')
-                ->fullWidth(),
+                ->rules('required'),
             
             Textarea::make(__('Description'), 'description')
                 ->rows(2)
                 ->sortable(),
-            
-            Status::make(__('Status'), 'status')
-                ->rules('required')
-                ->options(StatusClass::LIST('full'))
-                ->default(StatusClass::ACTIVE()->id)
-                ->sortable()
-                ->fullWidth(),
             
             Number::make(__('Count images'))
                 ->displayUsing(function()
@@ -76,14 +88,44 @@ class Gallery extends Resource
                             return $value
                                 ? Storage::disk($disk)->url($value)
                                 : null;
-                        })
-                        ->fullWidth(),
+                        }),
                 ])
+        ];
+    }
+    
+    protected function secondaryPanel(): array
+    {
+        return [
+            Panel::make('secondary', [
+                Status::make(__('Status'), 'status')
+                    ->rules('required')
+                    ->options(StatusClass::LIST('full'))
+                    ->default(StatusClass::ACTIVE()->id)
+                    ->sortable()
+                    ->fullWidth(),
+                
+                Number::make(__('Year'), 'year')
+                    ->min(2000)
+                    ->default(Carbon::now()->format('Y'))
+                    ->fillUsing(function($request, $model, $attribute, $requestAttribute)
+                    {
+                        if ($request->{$attribute} == null)
+                            $model->{$attribute} = Carbon::now()->format('Y');
+                    })
+                    ->textAlign('center')
+                    ->help(__('The Default Is The Current Year'))
+                    ->fullWidth(),
+            ])
         ];
     }
     
     public static function label(): string
     {
         return __('Gallery');
+    }
+    
+    public static function createButtonLabel(): string
+    {
+        return __('Create');
     }
 }
