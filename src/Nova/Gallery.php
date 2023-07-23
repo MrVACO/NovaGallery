@@ -12,7 +12,6 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Panel;
 use Laravel\Nova\Resource;
 use MrVaco\NovaGallery\Models\Gallery as GalleryModel;
 use MrVaco\NovaStatusesManager\Classes\StatusClass;
@@ -37,25 +36,6 @@ class Gallery extends Resource
     }
     
     public function fields(NovaRequest $request): array
-    {
-        return array_merge([Panel::make('', $this->primaryPanel())], $this->secondaryPanel());
-    }
-    
-    public function fieldsForCreate(NovaRequest $request): array
-    {
-        return array_merge([
-            Panel::make(__('Create gallery'), $this->primaryPanel())
-        ], $this->secondaryPanel($request));
-    }
-    
-    public function fieldsForUpdate(NovaRequest $request): array
-    {
-        return array_merge([
-            Panel::make(__('Update gallery'), $this->primaryPanel())
-        ], $this->secondaryPanel($request));
-    }
-    
-    protected function primaryPanel(): array
     {
         return [
             ID::make(),
@@ -89,33 +69,27 @@ class Gallery extends Resource
                                 ? Storage::disk($disk)->url($value)
                                 : null;
                         }),
-                ])
-        ];
-    }
-    
-    protected function secondaryPanel(): array
-    {
-        return [
-            Panel::make('secondary', [
-                Status::make(__('Status'), 'status')
-                    ->rules('required')
-                    ->options(StatusClass::LIST('full'))
-                    ->default(StatusClass::ACTIVE()->id)
-                    ->sortable()
-                    ->fullWidth(),
-                
-                Number::make(__('Year'), 'year')
-                    ->min(2000)
-                    ->default(Carbon::now()->format('Y'))
-                    ->fillUsing(function($request, $model, $attribute, $requestAttribute)
-                    {
-                        if ($request->{$attribute} == null)
-                            $model->{$attribute} = Carbon::now()->format('Y');
-                    })
-                    ->textAlign('center')
-                    ->help(__('The Default Is The Current Year'))
-                    ->fullWidth(),
-            ])
+                ]),
+            
+            Status::make(__('Status'), 'status')
+                ->rules('required')
+                ->options(StatusClass::LIST('full'))
+                ->default(StatusClass::ACTIVE()->id)
+                ->sortable()
+                ->col()
+                ->forSecondary(),
+            
+            Number::make(__('Year'), 'year')
+                ->min(2000)
+                ->default(Carbon::now()->format('Y'))
+                ->fillUsing(function($request, $model, $attribute, $requestAttribute)
+                {
+                    if ($request->{$attribute} == null)
+                        $model->{$attribute} = Carbon::now()->format('Y');
+                })
+                ->help(__('The Default Is The Current Year'))
+                ->col()
+                ->forSecondary(),
         ];
     }
     
