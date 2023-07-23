@@ -86,6 +86,8 @@ class Gallery extends Resource
                 {
                     if ($request->{$attribute} == null)
                         $model->{$attribute} = Carbon::now()->format('Y');
+                    else
+                        $model->{$attribute} = $request->{$attribute};
                 })
                 ->help(__('The Default Is The Current Year'))
                 ->col()
