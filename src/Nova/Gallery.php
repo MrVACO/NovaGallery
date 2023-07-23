@@ -90,6 +90,7 @@ class Gallery extends Resource
                         $model->{$attribute} = $request->{$attribute};
                 })
                 ->help(__('The Default Is The Current Year'))
+                ->textAlign('center')
                 ->col()
                 ->forSecondary(),
         ];
