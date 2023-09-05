@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -79,18 +80,17 @@ class Gallery extends Resource
                 ->col()
                 ->forSecondary(),
             
-            Number::make(__('Year'), 'year')
-                ->min(2000)
-                ->default(Carbon::now()->format('Y'))
-                ->fillUsing(function($request, $model, $attribute, $requestAttribute)
+            Select::make(__('Year'), 'year')
+                ->options($this->yearsArray($this->year | null))
+                ->default(Carbon::now()->year)
+                ->fillUsing(function($request, $model, $attribute)
                 {
                     if ($request->{$attribute} == null)
-                        $model->{$attribute} = Carbon::now()->format('Y');
+                        $model->{$attribute} = Carbon::now()->year;
                     else
                         $model->{$attribute} = $request->{$attribute};
                 })
                 ->help(__('The Default Is The Current Year'))
-                ->textAlign('center')
                 ->col()
                 ->forSecondary(),
         ];
@@ -104,5 +104,15 @@ class Gallery extends Resource
     public static function createButtonLabel(): string
     {
         return __('Create');
+    }
+    
+    protected function yearsArray(int $current_year): array
+    {
+        $list = range(Carbon::now()->addYear()->year, Carbon::now()->addYear(-3)->year);
+        
+        if (!in_array($current_year, $list))
+            $list[$current_year] = $current_year;
+        
+        return array_combine($list, $list);
     }
 }
