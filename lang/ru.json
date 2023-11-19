@@ -1,8 +1,9 @@
 {
     "Count images": "Кол-во изображений",
-    "Gallery": "Галерея",
     "Create gallery": "Создать галерею",
+    "Gallery": "Галерея",
+    "Images": "Изображения",
+    "The Default Is The Current Year": "По-умолчанию выставляется текущий год",
     "Update gallery": "Обновление галереи",
-    "Year": "Год",
-    "The Default Is The Current Year": "По-умолчанию выставляется текущий год"
+    "Year": "Год"
 }
