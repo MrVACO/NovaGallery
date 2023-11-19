@@ -98,6 +98,9 @@ class Gallery extends Resource
     
     protected function yearsArray(int $current_year): array
     {
+        if (empty($current_year))
+            $current_year = Carbon::now()->year;
+        
         $list = range(Carbon::now()->addYear()->year, Carbon::now()->addYear(-3)->year);
         
         if (!in_array($current_year, $list))
