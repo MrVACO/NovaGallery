@@ -2,6 +2,8 @@
 
 namespace MrVaco\NovaGallery;
 
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
@@ -30,6 +32,8 @@ class ToolServiceProvider extends ServiceProvider
         {
             $this->routes();
         });
+        
+        $this->forPublish();
     }
     
     /**
@@ -55,5 +59,32 @@ class ToolServiceProvider extends ServiceProvider
             ->middleware('api')
             ->prefix('api/gallery')
             ->group(__DIR__ . '/../routes/api.php');
+    }
+    
+    protected function forPublish()
+    {
+        if (!$this->app->runningInConsole())
+        {
+            return;
+        }
+        
+        $this->publishes([
+            __DIR__ . '/Database/migrations/create_galleries_table.stub' => $this->getMigrationFileName('create_galleries_table.php'),
+        ], 'gallery-migrations');
+    }
+    
+    /**
+     * Returns existing migration file if found, else uses the current timestamp.
+     */
+    protected function getMigrationFileName(string $migrationFileName): string
+    {
+        $timestamp = date('Y_m_d_His');
+        
+        $filesystem = $this->app->make(Filesystem::class);
+        
+        return Collection::make([database_path('migrations/')])
+            ->flatMap(fn($path) => $filesystem->glob($path . '*_' . $migrationFileName))
+            ->push(database_path("/migrations/{$timestamp}_{$migrationFileName}"))
+            ->first();
     }
 }
