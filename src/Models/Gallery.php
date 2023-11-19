@@ -21,8 +21,8 @@ class Gallery extends Model
         'year'   => 'integer'
     ];
     
-    public function imagesCount(): int
+    public function imagesCount(): int|string
     {
-        return count($this->images);
+        return !empty($this->images) ? count(json_decode($this->images)) : '';
     }
 }
