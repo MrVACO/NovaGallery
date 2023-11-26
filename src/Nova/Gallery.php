@@ -38,10 +38,12 @@ class Gallery extends Resource
     public function fields(NovaRequest $request): array
     {
         return [
-            ID::make(),
+            ID::make()
+                ->sortable(),
             
             Text::make(__('Name'), 'name')
-                ->rules('required'),
+                ->rules('required')
+                ->sortable(),
             
             Textarea::make(__('Description'), 'description')
                 ->rows(2)
@@ -82,6 +84,7 @@ class Gallery extends Resource
                         $model->{$attribute} = $request->{$attribute};
                 })
                 ->help(__('The Default Is The Current Year'))
+                ->sortable()
                 ->col()
                 ->forSecondary(),
         ];
