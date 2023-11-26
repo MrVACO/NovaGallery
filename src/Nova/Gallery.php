@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 use Laravel\Nova\Resource;
 use MrVaco\NovaGallery\Filters\GalleryYearFilter;
 use MrVaco\NovaGallery\Models\Gallery as GalleryModel;
@@ -36,6 +37,38 @@ class Gallery extends Resource
     }
     
     public function fields(NovaRequest $request): array
+    {
+        return $this->fieldsArray($request);
+    }
+    
+    public function fieldsForCreate(NovaRequest $request): array
+    {
+        return [
+            Panel::make(__('Create gallery'), $this->fieldsArray($request))
+        ];
+    }
+    
+    public function fieldsForDetail(NovaRequest $request): array
+    {
+        return [
+            Panel::make(__(':resource Details: :title', [
+                'resource' => '',
+                'title'    => $this->title()
+            ]), $this->fieldsArray($request))
+        ];
+    }
+    
+    public function fieldsForUpdate(NovaRequest $request): array
+    {
+        return [
+            Panel::make(__('Update :resource: :title', [
+                'resource' => '',
+                'title'    => $this->title()
+            ]), $this->fieldsArray($request))
+        ];
+    }
+    
+    public function fieldsArray(NovaRequest $request): array
     {
         return [
             ID::make()
