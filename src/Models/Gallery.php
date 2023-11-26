@@ -23,6 +23,6 @@ class Gallery extends Model
     
     public function imagesCount(): int|string
     {
-        return !empty($this->images) ? count(json_decode($this->images)) : '';
+        return !empty($this->images) && count(json_decode($this->images)) > 0 ? count(json_decode($this->images)) : "—";
     }
 }
