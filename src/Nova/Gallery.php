@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource;
+use MrVaco\NovaGallery\Filters\GalleryYearFilter;
 use MrVaco\NovaGallery\Models\Gallery as GalleryModel;
 use MrVaco\NovaStatusesManager\Classes\StatusClass;
 use MrVaco\NovaStatusesManager\Fields\Status;
@@ -96,7 +97,7 @@ class Gallery extends Resource
         return __('Create');
     }
     
-    protected function yearsArray(int $current_year): array
+    protected function yearsArray(int $current_year = null): array
     {
         if (empty($current_year))
             $current_year = Carbon::now()->year;
@@ -122,5 +123,12 @@ class Gallery extends Resource
     public static function redirectAfterUpdate(NovaRequest $request, $resource): string
     {
         return '/resources/' . static::uriKey();
+    }
+    
+    public function filters(NovaRequest $request): array
+    {
+        return [
+            new GalleryYearFilter
+        ];
     }
 }
